@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KALI LINUX // TERMINAL</title>
+  <style>
+    :root {
+      --blue: #00aaff;
+      --cyan: #00eaff;
+      --green: #00ff91;
+      --bg: #02060c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #010307;
+      color: var(--cyan);
+      font-family: Consolas, "Courier New", monospace;
+      overflow: hidden;
+    }
+
+    .page {
+      width: 100%;
+      height: 100vh;
+      min-height: 560px;
+      padding: 24px;
+      background: radial-gradient(ellipse at 22% 50%, #03264a 0%, transparent 45%), linear-gradient(120deg, #020712, #010205 75%);
+    }
+
+    .terminal {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 4, 9, .97);
+      border: 1px solid #008dff;
+      border-radius: 10px;
+      box-shadow: 0 0 22px #007bff20, inset 0 0 35px #00101e;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      height: 40px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      border-bottom: 1px solid #005b91;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .red {
+      background: #ff5555;
+    }
+
+    .yellow {
+      background: #ffca57;
+    }
+
+    .green {
+      background: #00e99a;
+    }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #00aaff;
+    }
+
+    .terminal-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px 20px;
+      font-size: clamp(10px, .85vw, 13px);
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      scrollbar-color: #007bff #02070d;
+      scrollbar-width: thin;
+    }
+
+    .prompt {
+      color: var(--green);
+    }
+
+    .command {
+      color: #e2f7ff;
+    }
+
+    .output {
+      color: #53cde9;
+    }
+
+    .success {
+      color: var(--green);
+    }
+
+    .warning {
+      color: #ffcc66;
+    }
+
+    .muted {
+      color: #427f99;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      vertical-align: middle;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: blink .8s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .footer {
+      flex-shrink: 0;
+      padding: 8px 15px;
+      border-top: 1px solid #003b62;
+      color: #007fbf;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    @media(max-width:850px) {
+      body {
+        overflow: auto;
+      }
+
+      .page {
+        height: 100vh;
+        min-height: 560px;
+        padding: 12px;
+      }
+
+      .terminal-body {
+        font-size: 12px;
+        padding: 14px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+
+    .K {
+      color: #007fbf;
+      background-color: #00101e;
+      border-color: red;
+      border-radius: 8px;
+      font-size: 10px;
+      padding: 2px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <section class="terminal">
+      <div class="terminal-header">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <div class="terminal-title">PEYKAN // TERMINAL</div>
+      </div>
+      <div class="terminal-body" id="terminal"><span class="muted">Initializing ORBIT CORE...</span></div>
+      <div class="footer">SYSTEM MONITOR // LIVE SIMULATION <input onclick="window.location.href='orbital.html'" class="K" type="button" value=" ORBITAL "></div>
+    </section>
+  </div>
+  <script>
+
+    const terminal = document.getElementById("terminal");
+
+
+
+    const scenes = [
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "whoami && id && uname -a\n"],
+
+        ["output", "kali\nuid=1000(kali) gid=1000(kali) groups=1000(kali),27(sudo)\nLinux kali 6.6.0-kali-amd64 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux\n"],
+
+        ["success", "\n[ OK ] Identity check complete\n[ OK ] Kernel information loaded\n[INFO] System ready for operations\n"]
+
+      ],
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "ip -brief address && ip route\n"],
+
+        ["output", "lo       UNKNOWN   127.0.0.1/8 ::1/128\neth0     UP        192.168.1.42/24\n\ndefault via 192.168.1.1 dev eth0\n192.168.1.0/24 dev eth0 proto kernel scope link\n"],
+
+        ["success", "[ OK ] Network configuration loaded\n[INFO] Interface scan complete\n"],
+
+        ["warning", "[WARN] External network presence detected\n"]
+
+      ],
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "ss -tuln\n"],
+
+        ["output", "Netid  State   Recv-Q  Send-Q  Local Address:Port\n"],
+
+        ["output", "tcp    LISTEN  0       128     127.0.0.1:631\n"],
+
+        ["output", "tcp    LISTEN  0       128     0.0.0.0:22\n"],
+
+        ["output", "udp    UNCONN  0       0       127.0.0.1:323\n"],
+
+        ["success", "\n[ OK ] Socket report complete\n[INFO] No suspicious connections found\n"]
+
+      ],
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "systemctl --no-pager --type=service\n"],
+
+        ["output", "UNIT                         LOAD    ACTIVE  SUB\n"],
+
+        ["success", "ssh.service                  loaded  active   running\n"],
+
+        ["success", "NetworkManager.service       loaded  active   running\n"],
+
+        ["success", "cron.service                 loaded  active   running\n"],
+
+        ["success", "systemd-journald.service     loaded  active   running\n"],
+
+        ["success", "\n[ OK ] Service status overview complete\n"],
+
+        ["output", "[INFO] Monitoring services...\n"]
+
+      ],
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "journalctl -n 12 --no-pager\n"],
+
+        ["output", "Oct 22 21:47:01 kali systemd[1]: Started Network Manager.\n"],
+
+        ["output", "Oct 22 21:47:02 kali kernel: Linux version 6.6.0-kali-amd64\n"],
+
+        ["output", "Oct 22 21:47:03 kali orbit-core: Planetary sync OK\n"],
+
+        ["output", "Oct 22 21:47:04 kali orbit-core: Moon trajectory stable\n"],
+
+        ["success", "Oct 22 21:47:05 kali network: Link is up\n"],
+
+        ["success", "Oct 22 21:47:06 kali terminal: Session ready\n"],
+
+        ["warning", "Oct 22 21:47:09 kali sensor: UNKNOWN PING\n"],
+
+        ["warning", "Oct 22 21:47:10 kali monitor: Signal lost...\n"],
+
+        ["success", "Oct 22 21:47:11 kali orbit-core: Reconnecting\n"],
+
+        ["success", "Oct 22 21:47:12 kali orbit-core: Link restored\n"]
+
+      ],
+
+      [
+
+        ["prompt", "┌──(kali㉿kali)-[~]\n└─$ "],
+
+        ["command", "python3 --version; git --version; df -h\n"],
+
+        ["output", "Python 3.12.7\n"],
+
+        ["output", "git version 2.45.2\n"],
+
+        ["output", "Filesystem      Size  Used Avail Use%\n"],
+
+        ["output", "/dev/sda1       120G   42G   72G  37%\n"],
+
+        ["success", "\n[ OK ] Resource report complete\n[INFO] ORBIT CORE operational\n"]
+
+      ]
+
+    ];
+
+
+
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+
+    async function typeText(text, className) {
+
+      const span = document.createElement("span");
+
+      span.className = className;
+
+      terminal.appendChild(span);
+
+
+
+      for (const char of text) {
+
+        span.textContent += char;
+
+        terminal.scrollTop = terminal.scrollHeight;
+
+
+
+        // Slightly varied speed makes typing feel more natural
+
+        await sleep(
+
+          char === "\n" ? 110 :
+
+            ".,:;".includes(char) ? 65 :
+
+              Math.random() * 12 + 9
+
+        );
+
+      }
+
+    }
+
+
+
+    async function clearTerminal() {
+
+      const oldText = terminal.textContent;
+
+      terminal.innerHTML = "";
+
+
+
+      const line = document.createElement("span");
+
+      line.className = "warning";
+
+      line.textContent = "root@orbit:~# PURGING SESSION";
+
+      terminal.appendChild(line);
+
+
+
+      await sleep(850);
+
+
+
+      // Animated character-by-character deletion
+
+      let remaining = oldText;
+
+      terminal.innerHTML = "";
+
+
+
+      const erase = document.createElement("span");
+
+      erase.className = "muted";
+
+      terminal.appendChild(erase);
+
+
+
+      while (remaining.length > 0) {
+
+        remaining = remaining.slice(0, -5);
+
+        erase.textContent = remaining;
+
+        terminal.scrollTop = terminal.scrollHeight;
+
+        await sleep(3);
+
+      }
+
+
+
+      terminal.innerHTML = "";
+
+    }
+
+
+
+    async function runTerminal() {
+
+      let sceneIndex = 0;
+
+
+
+      while (true) {
+
+        const scene = scenes[sceneIndex];
+
+
+
+        for (const [className, text] of scene) {
+
+          await typeText(text, className);
+
+        }
+
+
+
+        // Blinking cursor at the end of each scene
+
+        const cursor = document.createElement("span");
+
+        cursor.className = "cursor";
+
+        terminal.appendChild(cursor);
+
+
+
+        await sleep(2400);
+
+
+
+        sceneIndex++;
+
+
+
+        if (sceneIndex >= scenes.length) {
+
+          sceneIndex = 0;
+
+          await clearTerminal();
+
+          await sleep(500);
+
+        } else {
+
+          await sleep(650);
+
+        }
+
+      }
+
+    }
+
+
+
+    runTerminal();
+
+  </script>
+</body>
+
+</html>
